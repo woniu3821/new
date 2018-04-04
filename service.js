@@ -1,0 +1,28 @@
+const Koa = require('koa')
+const Router = require('koa-router')
+const app = new Koa()
+const router = new Router()
+const bodyParser = require('koa-bodyparser')
+app.use(bodyParser())
+router
+    .post('/login', require('./route/admin/login'))
+    .post('/captcha', require('./route/admin/captcha'))
+    .post('/checkname', require('./route/admin/checkname'))
+    .post('/register', require('./route/admin/register'))
+    .post('/setgroup', require('./route/admin/setgroup'))
+    .post('/user/navlist', require('./route/user/navlist'))
+    .post('/user/getframelist', require('./route/user/getframelist'))
+    .post('/user/outfit', require('./route/user/outfit'))
+    .post('/user/build', require('./route/user/build'))
+    .post('/user/created', require('./route/user/created'))
+    .post('/user/upmission', require('./route/user/upmission'))
+    .post('/user/setauthority', require('./route/user/setauthority'))
+router
+    .get('/getgroup', require('./route/admin/getgroup'))
+    .get('/getgrouptree', require('./route/admin/getgrouptree'))
+app
+    .use(router.routes())
+    .use(router.allowedMethods())
+app.listen(3000, () => {
+    console.log('app listening 3000...')
+})
