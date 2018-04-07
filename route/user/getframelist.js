@@ -5,7 +5,7 @@ module.exports = async (ctx, next) => {
     try {
         if (body.uid) {
             let aFrames = await dbUtils.query(`SELECT authority_table.fid, 
-            authority_table.permission,authority_table.order, user_table.frames FROM authority_table INNER JOIN user_table
+            authority_table.permission,authority_table.orders, user_table.frames FROM authority_table INNER JOIN user_table
             ON authority_table.uid=user_table.uid AND authority_table.uid="${body.uid}"`);
             ctx.body = aFrames; 
         } else {

@@ -1,33 +1,59 @@
 const dbUtils = require('../../middlewares/db-util')
-
+const utiltool=require('../../middlewares/utiltool')
 module.exports = async (ctx, next) => {
     const body = ctx.request.body
     console.log(body)
-    ctx.body = {
-        type: 'error',
-        success: false,
-        message: '测试'
+    let sub=body.subdata;
+    console.log(sub['10'].permission)
+    let inuid = utiltool.inParse(body.peoples)
+    try {
+        await dbUtils.query(`UPDATE user_table SET frames="${body.frames}" WHERE uid IN(${inuid})`)
+        await dbUtils.query(`UPDATE authority_table SET permission=CASE fid
+        WHEN 1 THEN "${sub['1'].permission}"
+        WHEN 2 THEN "${sub['2'].permission}"
+        WHEN 3 THEN "${sub['3'].permission}"
+        WHEN 4 THEN "${sub['4'].permission}"
+        WHEN 5 THEN "${sub['5'].permission}"
+        WHEN 6 THEN "${sub['6'].permission}"
+        WHEN 7 THEN "${sub['7'].permission}"
+        WHEN 8 THEN "${sub['8'].permission}"
+        WHEN 9 THEN "${sub['9'].permission}"
+        WHEN 10 THEN "${sub['10'].permission}"
+        WHEN 11 THEN "${sub['11'].permission}"
+        WHEN 12 THEN "${sub['12'].permission}"
+        WHEN 13 THEN "${sub['13'].permission}"
+        WHEN 14 THEN "${sub['14'].permission}"
+        WHEN 15 THEN "${sub['15'].permission}"
+        END,
+        orders=CASE fid
+        WHEN 1 THEN ${sub['1'].order}
+        WHEN 2 THEN ${sub['2'].order}
+        WHEN 3 THEN ${sub['3'].order}
+        WHEN 4 THEN ${sub['4'].order}
+        WHEN 5 THEN ${sub['5'].order}
+        WHEN 6 THEN ${sub['6'].order}
+        WHEN 7 THEN ${sub['7'].order}
+        WHEN 8 THEN ${sub['8'].order}
+        WHEN 9 THEN ${sub['9'].order}
+        WHEN 10 THEN ${sub['10'].order}
+        WHEN 11 THEN ${sub['11'].order}
+        WHEN 12 THEN ${sub['12'].order}
+        WHEN 13 THEN ${sub['13'].order}
+        WHEN 14 THEN ${sub['14'].order}
+        WHEN 15 THEN ${sub['15'].order}
+        END
+        WHERE uid IN(${inuid})`); 
+        ctx.body = {
+            type: 'success',
+            success: true,
+            message: '权限设置成功'
+        }   
+    } catch (error) {
+        ctx.body = {
+            type: 'error',
+            success: false,
+            message: '权限设置失败'
+        }
+        console.log(`setauthority error ${error}`)
     }
-    // try {
-    //     let isHas=await dbUtils.query(`SELECT uid,fid FROM authority_table`);
-        
-    //     let listData = await dbUtils.query(`SELECT cid,parentid,tags,end FROM organize_table`);
-    //     const user = await dbUtils.query(`SELECT uid FROM user_table where uid="${body.uid}"`);
-    //     let newUser = await dbUtils.query(`SELECT uid,name,outfit,working FROM user_table`);
-    //     // JSON.parse(JSON.stringify(allUser))
-    //     // console.log(newUser)
-    //     if (user.length) {
-    //         ctx.body = {
-    //             outfit: await getJsonTree(listData, "", newUser)
-    //         }
-    //     } else {
-    //         ctx.body = {
-    //             type: 'error',
-    //             success: false,
-    //             message: '用户列表数据初始化失败'
-    //         }
-    //     }
-    // } catch (error) {
-    //     console.log(`outfit error ${error}`)
-    // }
 }
