@@ -10,6 +10,7 @@ router
     .post('/checkname', require('./route/admin/checkname'))
     .post('/register', require('./route/admin/register'))
     .post('/setgroup', require('./route/admin/setgroup'))
+    .post('/getwating', require('./route/admin/getwating'))
     .post('/user/navlist', require('./route/user/navlist'))
     .post('/user/getframelist', require('./route/user/getframelist'))
     .post('/user/outfit', require('./route/user/outfit'))

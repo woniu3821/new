@@ -4,8 +4,11 @@ module.exports = async (ctx, next) => {
     const body = ctx.request.body
     try {
         let framesWorke = await transFrames(body)
-        let frames = await dbUtils.query(`SELECT frames FROM user_table WHERE uid="${body.uid}"`);
-        let aFrameworke = await dbUtils.query(`SELECT * FROM framework_table WHERE ID in (${framesWorke}) ORDER BY orders ASC`);
+        let aFrameworke = await dbUtils.query(`
+        SELECT framework_table.fid,framework_table.parentid,framework_table.path,framework_table.name,framework_table.icon,
+        framework_table.permission,framework_table.button,framework_table.end,authority_table.orders FROM framework_table
+        LEFT JOIN authority_table ON framework_table.fid=authority_table.fid  WHERE framework_table.fid in (${framesWorke})
+        AND authority_table.uid="${body.uid}" ORDER BY authority_table.orders ASC`);
         ctx.body = await getJsonTree(aFrameworke, 0)
     } catch (error) {
         console.log(`navlist error ${error}`)

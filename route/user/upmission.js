@@ -3,12 +3,10 @@ const dbUtils = require('../../middlewares/db-util')
 module.exports = async (ctx, next) => {
     const body = ctx.request.body
     try {
-        let uid = await dbUtils.query(`SELECT uid FROM user_table WHERE uid="${body.uid}"`)
-        if (uid.length) {
-            let listData = await dbUtils.query(`SELECT * FROM mission_table WHERE ID="${body.id}"`)
+            let listData = await dbUtils.query(`SELECT * FROM mission_table WHERE ID="${body.id}" AND uid="${body.uid}"`)
             let form = {
                 id: listData[0].ID,
-                name: listData[0].name,
+                title: listData[0].title,
                 date1: listData[0].timeend * 1000,
                 date2: parDate2(listData[0].timeend),
                 peoples: await transPeople(listData[0].peoples),
@@ -24,14 +22,12 @@ module.exports = async (ctx, next) => {
                     type: 'error',
                     message: '未知任务'
                 }
-            }
-        } else {
-            ctx.body = {
-                type: 'error',
-                message: '非法用户'
-            }
-        }
+            }    
     } catch (error) {
+        ctx.body = {
+            type: 'error',
+            message: '非法用户'
+        }
         console.log(`upmission error ${error}`)
     }
 }

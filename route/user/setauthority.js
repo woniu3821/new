@@ -1,10 +1,8 @@
 const dbUtils = require('../../middlewares/db-util')
 const utiltool=require('../../middlewares/utiltool')
 module.exports = async (ctx, next) => {
-    const body = ctx.request.body
-    console.log(body)
+    let body = ctx.request.body
     let sub=body.subdata;
-    console.log(sub['10'].permission)
     let inuid = utiltool.inParse(body.peoples)
     try {
         await dbUtils.query(`UPDATE user_table SET frames="${body.frames}" WHERE uid IN(${inuid})`)
