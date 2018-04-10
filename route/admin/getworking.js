@@ -7,18 +7,18 @@ module.exports = async (ctx, next) => {
             await dbUtils.query(`UPDATE task_table SET status=1 WHERE missionid=${body.id} AND touser="${body.uid}"`)
             ctx.body = {
                 success: true,
-                type:'success',
-                message:"任务接受成功"
+                type: 'success',
+                message: "测试"
             }
         } else {
             let listData = await dbUtils.query(`SELECT mission_table.*,task_table.*,user_table.name FROM task_table LEFT JOIN mission_table ON task_table.missionid=mission_table.ID 
-            LEFT JOIN user_table ON user_table.uid="${body.uid}" WHERE task_table.touser="${body.uid}" AND task_table.status=0`)
+            LEFT JOIN user_table ON user_table.uid="${body.uid}" WHERE task_table.touser="${body.uid}" AND task_table.status=1`)
             if (listData.length) {
                 ctx.body = {
                     success: true,
                     data: listData,
                     type: 'success',
-                    message: "任务已刷新"
+                    message: "获取任务成功"
                 }
             }
         }

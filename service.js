@@ -11,6 +11,7 @@ router
     .post('/register', require('./route/admin/register'))
     .post('/setgroup', require('./route/admin/setgroup'))
     .post('/getwating', require('./route/admin/getwating'))
+    .post('/getworking', require('./route/admin/getworking'))
     .post('/user/navlist', require('./route/user/navlist'))
     .post('/user/getframelist', require('./route/user/getframelist'))
     .post('/user/outfit', require('./route/user/outfit'))

@@ -6,8 +6,6 @@ module.exports = async (ctx, next) => {
         let listData = await dbUtils.query(`SELECT cid,parentid,tags,end FROM organize_table`);
         const user = await dbUtils.query(`SELECT uid FROM user_table where uid="${body.uid}"`);
         let newUser = await dbUtils.query(`SELECT uid,name,outfit,working FROM user_table`);
-        // JSON.parse(JSON.stringify(allUser))
-        // console.log(newUser)
         if (user.length) {
             ctx.body = {
                 outfit:await getJsonTree(listData, "", newUser)

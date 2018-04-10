@@ -2,9 +2,7 @@ const dbUtils = require('../../middlewares/db-util')
 const utiltool = require('../../middlewares/utiltool')
 module.exports = async (ctx, next) => {
     const body = ctx.request.body;
-    console.log(body)
     let inuid = utiltool.inParse(body.peoples)
-    console.log(inuid)
     try {
         let times = (new Date(body.times).getTime()) / 1000;
         let timebegain = (new Date().getTime()) / 1000;
