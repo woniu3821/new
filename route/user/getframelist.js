@@ -6,7 +6,7 @@ module.exports = async (ctx, next) => {
         if (body.uid) {
             let aFrames = await dbUtils.query(`SELECT authority_table.fid, 
             authority_table.permission,authority_table.orders, user_table.frames FROM authority_table INNER JOIN user_table
-            ON authority_table.uid=user_table.uid AND authority_table.uid="${body.uid}"`);
+            ON authority_table.uid=user_table.uid WHERE authority_table.uid="${body.uid}"`);
             ctx.body = aFrames; 
         } else {
             let aFrameworke = await dbUtils.query(`SELECT * FROM framework_table`);
@@ -17,7 +17,7 @@ module.exports = async (ctx, next) => {
         console.log(`getoutlist error ${error}`)
     }
 }
-async function getJsonTree(data, parentId) {
+/* async function getJsonTree(data, parentId) {
     try {
         let itemArr = [];
         for (let i = 0; i < data.length; i++) {
@@ -31,4 +31,4 @@ async function getJsonTree(data, parentId) {
     } catch (error) {
         console.log(error)
     }
-}
+} */

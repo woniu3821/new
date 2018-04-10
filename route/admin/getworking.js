@@ -20,6 +20,10 @@ module.exports = async (ctx, next) => {
                     type: 'success',
                     message: "获取任务成功"
                 }
+            }else{
+                ctx.body = {
+                    success: false
+                }  
             }
         }
     } catch (error) {

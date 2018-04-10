@@ -14,14 +14,13 @@ module.exports = async (ctx, next) => {
         console.log(`navlist error ${error}`)
     }
 }
-
 async function getJsonTree(data, parentId) {
     try {
         let itemArr = [];
         for (let i = 0; i < data.length; i++) {
             let node = data[i];
             if (node.parentid == parentId) {
-                itemArr.push({ path: node.path, name: node.name, end:node.end, icon: node.icon, permission: await transPermission(node.permission), child: await getJsonTree(data, node.fid) });  
+                itemArr.push({ path: node.path, name: node.name, end: node.end, icon: node.icon, permission: await transPermission(node.permission), child: await getJsonTree(data, node.fid) });
             }
         }
         return itemArr
