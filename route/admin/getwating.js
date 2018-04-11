@@ -4,7 +4,8 @@ module.exports = async (ctx, next) => {
     const body = ctx.request.body;
     try {
         if (body.id) {
-            await dbUtils.query(`UPDATE task_table SET status=1 WHERE missionid=${body.id} AND touser="${body.uid}"`)
+            let newTime=new Date().getTime()/1000
+            await dbUtils.query(`UPDATE task_table SET status=1,accepttime=${newTime} WHERE missionid=${body.id} AND touser="${body.uid}"`)
             ctx.body = {
                 success: true,
                 type: 'success',

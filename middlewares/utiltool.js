@@ -3,6 +3,10 @@ let inParse = (odata) => {
         return odata.map(item => {
             return `"${item}"`;
         }).join(",");
+    }else{
+        return odata.split(",").map(item=>{
+            return `"${item}"`
+        }).join(",");
     }
 };
 module.exports={
