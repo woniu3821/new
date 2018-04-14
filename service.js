@@ -13,6 +13,7 @@ router
     .post('/getwating', require('./route/admin/getwating'))
     .post('/getworking', require('./route/admin/getworking'))
     .post('/getprogress', require('./route/admin/getprogress'))
+    .post('/getmycensus', require('./route/admin/getmycensus'))
     .post('/user/navlist', require('./route/user/navlist'))
     .post('/user/getframelist', require('./route/user/getframelist'))
     .post('/user/outfit', require('./route/user/outfit'))
