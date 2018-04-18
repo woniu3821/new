@@ -1,5 +1,6 @@
-const bcrypt = require('bcryptjs')//密码加密
+const bcrypt = require('bcryptjs') //密码加密
 const dbUtils = require('../../middlewares/db-util')
+const utile = require('../../middlewares/utiltool')
 module.exports = async (ctx) => {
     const body = ctx.request.body
     try {
@@ -12,12 +13,13 @@ module.exports = async (ctx) => {
             }
             return;
         }
+        let timedata = utile.timeParse(new Date());
         let user = await dbUtils.query(`SELECT name FROM user_table WHERE name="${body.name}"`)
         if (!user.length) {
             let password = await bcrypt.hash(body.password, 5)
             let uid = await bcrypt.hash(`${body.name}${body.groups}`, 5)
-            await dbUtils.query(`INSERT INTO user_table(uid,name,password,outfit,level,frames)
-                VALUES ("${uid}","${body.name}","${password}","${body.groups}",0,"1,2,3,4,5,6,7,8,9,10,11,12,13,14,15")`);
+            await dbUtils.query(`INSERT INTO user_table(uid,name,password,outfit,level,setuptime,frames)
+                VALUES ("${uid}","${body.name}","${password}","${body.groups}",0,"${timedata}","1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18")`);
             await dbUtils.query(`INSERT INTO authority_table(uid,fid,permission,orders)
              SELECT "${uid}",11,null,1
              UNION ALL
@@ -25,9 +27,9 @@ module.exports = async (ctx) => {
              UNION ALL
              SELECT "${uid}",13,null,3
              UNION ALL
-             SELECT "${uid}",14,null,4
+             SELECT "${uid}",14,null,5
              UNION ALL
-             SELECT "${uid}",15,null,5
+             SELECT "${uid}",15,null,4
              UNION ALL
              SELECT "${uid}",1,null,6
              UNION ALL
@@ -48,6 +50,12 @@ module.exports = async (ctx) => {
              SELECT "${uid}",4,null,14
              UNION ALL
              SELECT "${uid}",2,null,15
+             UNION ALL
+             SELECT "${uid}",16,null,16
+             UNION ALL
+             SELECT "${uid}",17,null,17
+             UNION ALL
+             SELECT "${uid}",18,null,18
              `);
             ctx.status = 200;
             ctx.body = {

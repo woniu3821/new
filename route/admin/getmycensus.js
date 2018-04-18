@@ -2,7 +2,6 @@ const dbUtils = require('../../middlewares/db-util')
 const utiltool = require('../../middlewares/utiltool')
 module.exports = async (ctx, next) => {
     const body = ctx.request.body;
-    console.log(body)
     try {
         if (body.uid) {
             let listData = []
