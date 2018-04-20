@@ -31,10 +31,10 @@ router
     .post('/user/getuserinfo', require('./route/user/getuserinfo'))
     .post('/user/setmyinfo', require('./route/user/setmyinfo'))
     .post('/user/subdaily', require('./route/user/subdaily'))
+    .post('/user/getmydaily', require('./route/user/getmydaily'))
 router
     .get('/getgroup', require('./route/admin/getgroup'))
     .get('/getgrouptree', require('./route/admin/getgrouptree'))
-
 app
     .use(router.routes())
     .use(router.allowedMethods())

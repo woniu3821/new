@@ -17,15 +17,27 @@ let storage = multer.diskStorage({
                         if (exists) {
                             cb(null, pathdata[0].dirpath)
                         } else {
-                            console.log("多图失败")
+                            fs.mkdir(pathdata[0].dirpath, function (err) {
+                                if (err) {
+                                    throw err
+                                } else {
+                                    cb(null, pathdata[0].dirpath)
+                                }
+                            });
                         }
                     });
 
                 } else {
                     fs.exists(pathlist, function (exists) {
                         if (exists) {
-                            console.log("dir is already exists")
-                            return
+                            temp_dir = Date.now()
+                            fs.mkdir(pathlist, function (err) {
+                                if (err) {
+                                    console.error(err);
+                                } else {
+                                    cb(null, pathlist)
+                                }
+                            });
                         } else {
                             fs.mkdir(pathlist, function (err) {
                                 if (err) {

@@ -12,7 +12,7 @@ module.exports = async (ctx, next) => {
                 return new Promise((resolve, reject) => {
                     fs.unlink(`./${pathlist}`, function (err) {
                         if (err) {
-                            reject(false)
+                            throw err
                         } else {
                             dbUtils.query(`UPDATE user_table SET headpath='${headpath}' WHERE uid='${body.uid}'`);
                             resolve(true);
