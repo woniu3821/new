@@ -1,32 +1,33 @@
-const svgCaptcha = require('svg-captcha');
-const json = require('./json')
+const svgCaptcha = require("svg-captcha");
 module.exports = async (ctx, next) => {
-    const body = ctx.request.body
-    try {
-        var captcha = svgCaptcha.create({
-            inverse: false,
-            // 字体大小  
-            fontSize: 36,
-            // 噪声线条数  
-            noise: 3,
-            // 宽度  
-            width: 90,
-            // 高度  
-            height: 40
-        })
-        if (body.value) {
-            let value = body.value.toLowerCase();
-            if (value == json.code) {
-                ctx.body = "pass"
-            } else {
-                json.code = captcha.text.toLowerCase();
-                ctx.body = captcha.data;
-            }
-        } else {
-            json.code = captcha.text.toLowerCase();
-            ctx.body = captcha.data;
-        }
-    } catch (error) {
-        console.log(`checked error ${error}`)
+  const body = ctx.request.body;
+  try {
+    let captcha = svgCaptcha.create({
+      ignoreChars: "0o1i",
+      fontSize: 36,
+      noise: 3,
+      width: 120,
+      height: 50,
+      color: true,
+      size: 4
+    });
+    if (body.value) {
+      let value = body.value.toLowerCase();
+      let oldvalue = ctx.session.captcha;
+      if (value === oldvalue) {
+        this.session = null;
+        ctx.body = "pass";
+      } else {
+        let code = captcha.text.toLowerCase();
+        ctx.session.captcha = code;
+        ctx.body = captcha.data;
+      }
+    } else {
+      let code = captcha.text.toLowerCase();
+      ctx.session.captcha = code;
+      ctx.body = captcha.data;
     }
-}
+  } catch (error) {
+    console.log(`captcha  ${error}`);
+  }
+};
