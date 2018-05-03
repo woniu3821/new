@@ -3,51 +3,40 @@ const Router = require("koa-router");
 const bodyParser = require("koa-bodyparser");
 const static = require("koa-static");
 const path = require("path");
-const upload = require("./middlewares/uploadStorage");
+const jwtKoa = require("koa-jwt"); //验证token
 const session = require("koa-session");
-const sessionCofig = require("./middlewares/session.config");
+const cookie = require("cookie");
+const http = require("http");
+const socketio = require("socket.io");
+const socketHander = require("./middlewares/socket.io");
+const config = require("./config");
+const router = require("./route");
 const app = new Koa();
-app.use(async (ctx, next) => {
-  await next();
-  if (ctx.path === "/favicon.ico") return;
-});
-app.keys = ["daklfjkldafklfdsajkfliiwr6738426478"];
-app.use(session(sessionCofig, app));
-const router = new Router();
+
+app.use(jwtKoa({ secret: config.secret }).unless(config.whiteList));
+app.keys = config.keys;
+app.use(session(config.session_config, app));
 app.use(bodyParser());
 app.use(static(path.join(__dirname, "static")));
-router
-  .post("/login", require("./route/admin/login"))
-  .post("/captcha", require("./route/admin/captcha"))
-  .post("/upload", upload.single("file"), require("./route/admin/upload"))
-  .post("/logupload", upload.single("img"), require("./route/admin/logupload"))
-  .post("/checkname", require("./route/admin/checkname"))
-  .post("/register", require("./route/admin/register"))
-  .post("/setgroup", require("./route/admin/setgroup"))
-  .post("/getwating", require("./route/admin/getwating"))
-  .post("/getworking", require("./route/admin/getworking"))
-  .post("/getprogress", require("./route/admin/getprogress"))
-  .post("/getmycensus", require("./route/admin/getmycensus"))
-  .post("/getusermap", require("./route/admin/getusermap"))
-  .post("/actionlog", require("./route/admin/actionlog"))
-  .post("/findpass", require("./route/admin/findpass"))
-  .post("/resetpass", require("./route/user/resetpass"))
-  .post("/user/navlist", require("./route/user/navlist"))
-  .post("/user/getframelist", require("./route/user/getframelist"))
-  .post("/user/outfit", require("./route/user/outfit"))
-  .post("/user/build", require("./route/user/build"))
-  .post("/user/created", require("./route/user/created"))
-  .post("/user/upmission", require("./route/user/upmission"))
-  .post("/user/setauthority", require("./route/user/setauthority"))
-  .post("/user/getuserinfo", require("./route/user/getuserinfo"))
-  .post("/user/setmyinfo", require("./route/user/setmyinfo"))
-  .post("/user/subdaily", require("./route/user/subdaily"))
-  .post("/user/getmydaily", require("./route/user/getmydaily"));
-router
-  .get("/getgroup", require("./route/admin/getgroup"))
-  .get("/getgrouptree", require("./route/admin/getgrouptree"))
-  .get("/resetpass", require("./route/admin/resetpass"));
 app.use(router.routes()).use(router.allowedMethods());
+
+const server = http.createServer(app.callback());
+const io = new socketio(server);
+io.use(async (socket, next) => {
+  if (socket.request.headers.cookie) {
+    socket.request.cookies = cookie.parse(socket.request.headers.cookie);
+    await next();
+  } else {
+    return next(new Error("Missing cookie headers"));
+  }
+});
+io.on("connection", function(socket) {
+  socketHander(socket, io);
+});
+
 app.listen(3000, () => {
   console.log("app listening 3000...");
+});
+server.listen(2700, () => {
+  console.log(`socket listening 2700..`);
 });

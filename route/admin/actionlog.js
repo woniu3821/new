@@ -10,6 +10,6 @@ module.exports = async (ctx, next) => {
     );
     if (raturns.affectedRows) ctx.status = 200;
   } catch (error) {
-    console.log(`actions_table ${error}`);
+    console.log(`actionslog ${error}`);
   }
 };

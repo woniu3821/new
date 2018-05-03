@@ -21,7 +21,7 @@ module.exports = async (ctx, next) => {
         ctx.body = html(cheked);
       }
     } else {
-      ctx.body = "没找到";
+      ctx.status = 404;
     }
   } catch (error) {
     console.log(`resetpass : ${error}`);
