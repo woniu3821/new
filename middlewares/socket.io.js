@@ -6,7 +6,7 @@ module.exports = async (socket, io) => {
   let socketId = socket.id;
   //   重载或登录保存用户socketid
   if (userId) {
-    asyncSocket.saveUserSocketId(userId, socketId);
+    asyncSocket.saveUserSocketId(userId, 1, socketId);
     asyncSocket.getBaseData(userId).then(res => {
       io.sockets.sockets[socketId].emit("login", res);
     });
@@ -33,14 +33,17 @@ module.exports = async (socket, io) => {
   });
   //断开连接重置状态
   socket.on("disconnect", _ => {
-    asyncSocket.saveUserSocketId(userId, null);
+    asyncSocket.saveUserSocketId(userId, 0, null);
   });
 };
 
 async function findSend(peoples, html, action, io) {
   let online = await asyncSocket.findUserOnline(peoples);
   if (online.length) {
-    for (let { email, socketid } of online) {
+    for (let {
+        email,
+        socketid
+      } of online) {
       if (email) await sedEmail("1470758149@qq.com", "任务通知 √", html);
       if (socketid) io.sockets.sockets[socketid].emit(action);
     }

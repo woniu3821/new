@@ -8,7 +8,7 @@ module.exports = async (ctx, next) => {
         let newUser = await dbUtils.query(`SELECT uid,name,outfit,working FROM user_table`);
         if (user.length) {
             ctx.body = {
-                outfit:await getJsonTree(listData, "", newUser)
+                outfit: await getJsonTree(listData, "", newUser)
             }
         } else {
             ctx.body = {
@@ -28,18 +28,40 @@ async function getJsonTree(data, parentId, dataUser) {
             let node = data[i];
             //data.splice(i, 1)
             if (node.parentid == parentId) {
-                let newNode = { id: node.cid, label: node.tags, children:await getJsonTree(data, node.cid, dataUser) };
+                let newNode = {
+                    id: node.cid,
+                    label: node.tags,
+                    children: await getJsonTree(data, node.cid, dataUser)
+                };
                 if (node.end) {
                     let userArr = []
-                    for (let { uid, outfit, name, working } of dataUser) {
+                    for (let {
+                            uid,
+                            outfit,
+                            name,
+                            working
+                        } of dataUser) {
                         if (node.cid == outfit) {
-                            userArr.push({ id: uid, label: `${name}(${working})`,end:true })
+                            working = working ? "在线" : "离线"
+                            userArr.push({
+                                id: uid,
+                                label: `${name}(${working})`,
+                                end: true
+                            })
                         }
                     }
                     if (userArr.length) {
-                        itemArr.push({ id: node.cid, label: node.tags, children: userArr });
+                        itemArr.push({
+                            id: node.cid,
+                            label: node.tags,
+                            children: userArr
+                        });
                     } else {
-                        itemArr.push({ id: node.cid, label: node.tags, disabled:true});
+                        itemArr.push({
+                            id: node.cid,
+                            label: node.tags,
+                            disabled: true
+                        });
                     }
 
                 } else {
@@ -53,4 +75,3 @@ async function getJsonTree(data, parentId, dataUser) {
         console.log(error)
     }
 }
-
